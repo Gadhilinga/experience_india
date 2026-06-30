@@ -1,0 +1,45 @@
+name: experience_india
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.0-290.1.beta
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  flutter_screenutil: ^5.9.3
+  firebase_core: ^4.1.1
+  cloud_firestore: ^6.6.0
+  url_launcher: ^6.3.2
+  flutter_animate: ^4.5.2
+  google_fonts: ^8.1.0
+  carousel_slider: ^5.1.1
+  image_picker: ^1.1.2
+  get: ^4.7.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
+
+  # Uncomment and edit if you have assets
+  # assets:
+  #   - assets/images/
+  #   - assets/icons/
+
+  # Uncomment and edit if you have custom fonts
+  # fonts:
+  #   - family: Poppins
+  #     fonts:
+  #       - asset: assets/fonts/Poppins-Regular.ttf
+  #       - asset: assets/fonts/Poppins-Bold.ttf
+  #         weight: 700
