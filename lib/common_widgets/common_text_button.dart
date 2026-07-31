@@ -7,6 +7,7 @@ class CommonTextButton extends StatelessWidget {
   final Color? textColor;
   final double? fontSize;
   final FontWeight? fontWeight;
+  final bool isLoading;
   final double? borderRadius;
   final EdgeInsetsGeometry? padding;
   final bool isOutlineButton;
@@ -21,6 +22,7 @@ class CommonTextButton extends StatelessWidget {
     this.fontSize,
     this.fontWeight,
     this.borderRadius,
+    this.isLoading = false,
     this.padding,
     this.isOutlineButton = false,
     this.borderColor,
@@ -54,7 +56,7 @@ class CommonTextButton extends StatelessWidget {
     }
 
     return ElevatedButton(
-      onPressed: onPressed,
+      onPressed: isLoading ? null : onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: backgroundColor ?? Colors.blue,
         padding:
@@ -63,14 +65,23 @@ class CommonTextButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(borderRadiusValue),
         ),
       ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: textColor ?? Colors.white,
-          fontSize: fontSize ?? 16,
-          fontWeight: fontWeight ?? FontWeight.w600,
-        ),
-      ),
+      child: isLoading
+          ? const SizedBox(
+              width: 15,
+              height: 15,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.white,
+              ),
+            )
+          : Text(
+              text,
+              style: TextStyle(
+                color: textColor ?? Colors.white,
+                fontSize: fontSize ?? 16,
+                fontWeight: fontWeight ?? FontWeight.w600,
+              ),
+            ),
     );
   }
 }

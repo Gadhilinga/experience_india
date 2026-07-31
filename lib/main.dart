@@ -1,11 +1,20 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'features/splash/splash_screen.dart';
-import 'core/theme/app_theme.dart';
+import 'package:get/get.dart';
 
+import 'core/theme/app_theme.dart';
+import 'features/splash/splash_screen.dart';
 
 void main() {
   runApp(const ExperienceIndia());
+  // runApp(
+  //   DevicePreview(
+  //     enabled: !kReleaseMode,
+  //     builder: (context) => const ExperienceIndia(),
+  //   ),
+  // );
 }
 
 class ExperienceIndia extends StatelessWidget {
@@ -13,18 +22,14 @@ class ExperienceIndia extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      designSize: const Size(390, 844),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (_, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'YATRIVO',
-          theme: AppTheme.lightTheme,
-          home: const SplashScreen(),
-        );
-      },
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Yatrivo',
+      theme: AppTheme.lightTheme,
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+      home: const SplashScreen(),
     );
   }
 }

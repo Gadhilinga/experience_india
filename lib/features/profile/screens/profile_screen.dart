@@ -381,7 +381,7 @@ class _ProfileScreenState
 
                 backgroundImage:
                     AssetImage(
-                  "assets/images/yatrivo_logo.jpeg",
+                  "assets/images/app_logo.png",
                 ),
               ),
             ),
