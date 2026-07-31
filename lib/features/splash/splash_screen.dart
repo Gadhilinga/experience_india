@@ -1,6 +1,6 @@
-import 'package:experience_india/features/auth/screens/login_screen.dart';
 import 'package:flutter/material.dart';
-import '../../core/theme/app_colors.dart';
+import 'package:experience_india/core/theme/app_colors.dart';
+import 'package:experience_india/features/auth/screens/login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -9,14 +9,45 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final Animation<double> _scaleAnimation;
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
 
-    Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
-        context,
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.18,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        _controller.reverse();
+      } else if (status == AnimationStatus.dismissed) {
+        _goToLogin();
+      }
+    });
+
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _goToLogin() {
+    if (!mounted) return;
+    Future.microtask(() {
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     });
@@ -25,50 +56,32 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFFF7A00), Colors.white, Color(0xFF138808)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+      backgroundColor: AppColors.white,
+      body: Center(
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: SizedBox(
+            width: 190,
+            height: 190,
 
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-
-            children: [
-              Image.asset("assets/images/yatrivo_logo.jpeg", height: 180),
-
-              const SizedBox(height: 30),
-
-              Text(
-                "YATRIVO",
-                style: TextStyle(
-                  fontSize: 42,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.primary,
-                  letterSpacing: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/app_logo.png',
+                  width: 154,
+                  height: 154,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.travel_explore,
+                      color: AppColors.secondary,
+                      size: 120,
+                    );
+                  },
                 ),
               ),
-
-              const SizedBox(height: 12),
-
-              Text(
-                "EXPERIENCE THE INDIA",
-                style: TextStyle(
-                  fontSize: 16,
-                  letterSpacing: 1.5,
-                  color: AppColors.indiaGreen,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-
-              const SizedBox(height: 50),
-
-              CircularProgressIndicator(color: AppColors.saffron),
-            ],
+            ),
           ),
         ),
       ),

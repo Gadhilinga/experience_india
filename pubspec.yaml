@@ -21,22 +21,29 @@ dependencies:
   carousel_slider: ^5.1.1
   image_picker: ^1.1.2
   get: ^4.7.3
+  device_preview: ^1.2.0
+  http: ^1.6.0
+  geolocator: ^11.1.0
+  geocoding: ^3.0.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/app_logo.png"
 
 flutter:
   uses-material-design: true
 
-  # Uncomment and edit if you have assets
-  # assets:
-  #   - assets/images/
-  #   - assets/icons/
+  assets:
+    - assets/images/
 
-  # Uncomment and edit if you have custom fonts
   # fonts:
   #   - family: Poppins
   #     fonts:

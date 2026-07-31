@@ -1,5 +1,6 @@
 import 'package:experience_india/common_widgets/common_text_widget.dart';
 import 'package:experience_india/core/theme/app_colors.dart';
+import 'package:experience_india/features/auth/screens/register_screen.dart';
 import 'package:experience_india/features/navbar/main_navbar.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(24),
@@ -18,7 +19,21 @@ class LoginScreen extends StatelessWidget {
             children: [
               const SizedBox(height: 40),
 
-              Image.asset("assets/images/yatrivo_logo.jpeg", height: 140),
+              ClipOval(
+                child: Image.asset(
+                  "assets/images/app_logo.png",
+                  width: 160,
+                  height: 160,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return const Icon(
+                      Icons.travel_explore,
+                      color: Color(0xFFFF7A00),
+                      size: 120,
+                    );
+                  },
+                ),
+              ),
 
               const SizedBox(height: 30),
 
@@ -133,7 +148,14 @@ class LoginScreen extends StatelessWidget {
                   ),
 
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RegisterScreen(),
+                        ),
+                      );
+                    },
                     child: CommonTextWidget(
                       title: "Sign Up",
                       color: AppColors.saffron,
