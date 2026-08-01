@@ -1,12 +1,28 @@
+import 'package:experience_india/common_widgets/common_text_button.dart';
+import 'package:experience_india/common_widgets/common_text_field.dart';
 import 'package:experience_india/common_widgets/common_text_widget.dart';
 import 'package:experience_india/core/theme/app_colors.dart';
+import 'package:experience_india/features/auth/controller/login_controller.dart';
 import 'package:experience_india/features/auth/screens/register_screen.dart';
-import 'package:experience_india/features/navbar/main_navbar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart' show Get;
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+final LoginController controller = Get.put(LoginController());
+
+final TextEditingController emailController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
+
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,102 +34,18 @@ class LoginScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
-
-              ClipOval(
-                child: Image.asset(
-                  "assets/images/app_logo.png",
-                  width: 160,
-                  height: 160,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return const Icon(
-                      Icons.travel_explore,
-                      color: Color(0xFFFF7A00),
-                      size: 120,
-                    );
-                  },
-                ),
-              ),
-
+              _appIcon(),
               const SizedBox(height: 30),
-
-              CommonTextWidget(
-                title: 'Welcome to YATRIVO',
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: AppColors.primary,
-              ),
-
+              _welcomeText(),
               const SizedBox(height: 10),
-
-              CommonTextWidget(
-                title: 'Experience The India 🇮🇳',
-                fontSize: 16,
-                color: AppColors.indiaGreen,
-              ),
-
+              _description(),
               const SizedBox(height: 50),
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Email",
-                  prefixIcon: Icon(Icons.email, color: AppColors.saffron),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-
+              _emailOrPhone(),
               const SizedBox(height: 20),
-
-              TextField(
-                obscureText: true,
-                decoration: InputDecoration(
-                  hintText: "Password",
-                  prefixIcon: Icon(Icons.lock, color: AppColors.saffron),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-
+              _passWord(),
               const SizedBox(height: 30),
-
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.saffron,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  onPressed: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const MainNavbar(),
-                      ),
-                    );
-                  },
-                  child: const CommonTextWidget(
-                    title: "Login",
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-
+              _login(),
               const SizedBox(height: 20),
-
               SizedBox(
                 width: double.infinity,
                 height: 60,
@@ -167,6 +99,95 @@ class LoginScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _login() {
+    return Obx(
+      () => CommonTextButton(
+        onPressed: controller.isLoading.value
+            ? null
+            : () async {
+                await controller.loginAPI(
+                  emailController.text.trim(),
+                  passwordController.text.trim(),
+                );
+              },
+        isLoading: controller.isLoading.value,
+        text: "Login",
+        backgroundColor: AppColors.saffron,
+        textColor: AppColors.white,
+        fontSize: 18,
+        fontWeight: FontWeight.bold,
+        borderRadius: 10,
+        width: double.infinity,
+      ),
+    );
+  }
+
+  Widget _passWord() {
+    return Obx(
+      () => CommonTextField(
+        controller: passwordController,
+        hintText: "Password",
+        obscureText: !controller.isPasswordVisible.value,
+        prefixIcon: const Icon(Icons.lock, color: AppColors.saffron),
+        suffixIcon: IconButton(
+          icon: Icon(
+            controller.isPasswordVisible.value
+                ? Icons.visibility
+                : Icons.visibility_off,
+            color: AppColors.saffron,
+          ),
+          onPressed: () {
+            controller.isPasswordVisible.toggle();
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _emailOrPhone() {
+    return CommonTextField(
+      controller: emailController,
+      hintText: "Email or Mobile Number",
+      keyboardType: TextInputType.emailAddress,
+      prefixIcon: const Icon(Icons.email, color: AppColors.saffron),
+    );
+  }
+
+  Widget _description() {
+    return CommonTextWidget(
+      title: 'Experience The India 🇮🇳',
+      fontSize: 16,
+      color: AppColors.indiaGreen,
+    );
+  }
+
+  Widget _welcomeText() {
+    return CommonTextWidget(
+      title: 'Welcome to YATRIVO',
+      fontSize: 30,
+      fontWeight: FontWeight.bold,
+      color: AppColors.primary,
+    );
+  }
+
+  Widget _appIcon() {
+    return ClipOval(
+      child: Image.asset(
+        "assets/images/app_logo.png",
+        width: 160,
+        height: 160,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return const Icon(
+            Icons.travel_explore,
+            color: Color(0xFFFF7A00),
+            size: 120,
+          );
+        },
       ),
     );
   }

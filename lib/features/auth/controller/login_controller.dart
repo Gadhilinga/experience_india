@@ -1,12 +1,13 @@
-import 'package:experience_india/core/constants/app_constants.dart';
+import 'package:experience_india/core/network/api_end_points.dart';
 import 'package:experience_india/features/home/home_screen.dart';
+import 'package:experience_india/features/navbar/main_navbar.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class LoginController extends GetxController {
   RxBool isLoading = false.obs;
-
+  RxBool isPasswordVisible = false.obs;
   Future<void> registerAPI(
     String? firstName,
     String? lastName,
@@ -28,11 +29,11 @@ class LoginController extends GetxController {
       };
 
       print("========== REGISTER API ==========");
-      print("URL : ${ApiConstants.register}");
+      print("URL : ${ApiEndpoints.register}");
       print("Payload : ${jsonEncode(payload)}");
 
       final response = await http.post(
-        Uri.parse(ApiConstants.register),
+        Uri.parse(ApiEndpoints.register),
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -64,6 +65,50 @@ class LoginController extends GetxController {
     } catch (e) {
       print("Exception : $e");
 
+      Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> loginAPI(String emailOrMobile, String password) async {
+    try {
+      isLoading.value = true;
+
+      final payload = {
+        "emailormbilenumber": emailOrMobile,
+        "password": password,
+      };
+
+      final response = await http.post(
+        Uri.parse(ApiEndpoints.login),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: jsonEncode(payload),
+      );
+
+      print(response.body);
+
+      if (response.statusCode == 200) {
+        Get.snackbar(
+          "Success",
+          "Login Successful",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+
+        Get.offAll(() => const MainNavbar());
+      } else {
+        final data = jsonDecode(response.body);
+
+        Get.snackbar(
+          "Login Failed",
+          data["detail"] ?? "Invalid Credentials",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
       Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading.value = false;
