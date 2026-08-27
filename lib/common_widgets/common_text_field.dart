@@ -1,3 +1,4 @@
+import 'package:experience_india/core/theme/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class CommonTextField extends StatelessWidget {
@@ -10,7 +11,9 @@ class CommonTextField extends StatelessWidget {
   final String? Function(String?)? validator;
   final bool readOnly;
   final VoidCallback? onTap;
+  final ValueChanged<String>? onChanged;
   final int maxLines;
+  final Color? borderColor;
 
   const CommonTextField({
     super.key,
@@ -23,7 +26,9 @@ class CommonTextField extends StatelessWidget {
     this.validator,
     this.readOnly = false,
     this.onTap,
+    this.onChanged,
     this.maxLines = 1,
+    this.borderColor,
   });
 
   @override
@@ -35,6 +40,7 @@ class CommonTextField extends StatelessWidget {
       validator: validator,
       readOnly: readOnly,
       onTap: onTap,
+      onChanged: onChanged,
       maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hintText,
@@ -45,11 +51,18 @@ class CommonTextField extends StatelessWidget {
 
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(
+            color: borderColor ?? AppColors.border,
+            width: 2,
+          ),
         ),
 
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
-          borderSide: const BorderSide(color: Colors.grey, width: 2),
+          borderSide: BorderSide(
+            color: borderColor ?? AppColors.border,
+            width: 2,
+          ),
         ),
 
         errorBorder: OutlineInputBorder(
@@ -59,7 +72,7 @@ class CommonTextField extends StatelessWidget {
 
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 16,
-          vertical: 16,
+          vertical: 10,
         ),
       ),
     );

@@ -1,7 +1,6 @@
 import 'package:experience_india/core/theme/app_colors.dart';
+import 'package:experience_india/features/explore/screens/explore_screen.dart';
 import 'package:flutter/material.dart';
-
-import '../explore/explore_screen.dart';
 import '../home/home_screen.dart';
 import '../planner/planner_screen.dart';
 import '../profile/screens/profile_screen.dart';

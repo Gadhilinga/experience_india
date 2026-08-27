@@ -119,6 +119,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
 
     if (!serviceEnabled) {
+      Get.snackbar("Location", "Please enable location services");
       return;
     }
 
@@ -128,20 +129,61 @@ class _RegisterScreenState extends State<RegisterScreen> {
       permission = await Geolocator.requestPermission();
     }
 
-    if (permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.denied) {
+      Get.snackbar("Location", "Location permission denied");
       return;
     }
 
-    Position position = await Geolocator.getCurrentPosition();
+    if (permission == LocationPermission.deniedForever) {
+      Get.snackbar(
+        "Location",
+        "Location permission permanently denied. Please enable it from settings.",
+      );
+      return;
+    }
 
-    List<Placemark> placemarks = await placemarkFromCoordinates(
-      position.latitude,
-      position.longitude,
-    );
+    try {
+      final Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
 
-    Placemark place = placemarks.first;
+      final List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
 
-    locationController.text = "${place.locality}, ${place.administrativeArea}";
+      if (placemarks.isEmpty) {
+        return;
+      }
+
+      final Placemark place = placemarks.first;
+
+      final List<String> addressParts =
+          [
+                place.name,
+                place.street,
+                place.subLocality,
+                place.locality,
+                place.subAdministrativeArea,
+                place.administrativeArea,
+                place.postalCode,
+                place.country,
+              ]
+              .where((value) => value != null && value.trim().isNotEmpty)
+              .map((value) => value!.trim())
+              .toList();
+
+      locationController.text = addressParts.join(", ");
+
+      print("========== CURRENT LOCATION ==========");
+      print("Latitude : ${position.latitude}");
+      print("Longitude : ${position.longitude}");
+      print("Address : ${locationController.text}");
+    } catch (e) {
+      print("Location Exception : $e");
+
+      Get.snackbar("Location Error", "Unable to get your current location");
+    }
   }
 
   Widget _textFeild(
