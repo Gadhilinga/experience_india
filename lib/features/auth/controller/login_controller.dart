@@ -1,7 +1,9 @@
 import 'package:experience_india/core/network/api_end_points.dart';
 import 'package:experience_india/features/home/home_screen.dart';
 import 'package:experience_india/features/navbar/main_navbar.dart';
+import 'package:experience_india/services/auth_storage.dart';
 import 'package:get/get.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -80,18 +82,38 @@ class LoginController extends GetxController {
         "password": password,
       };
 
-      final response = await http.post(
-        Uri.parse(ApiEndpoints.login),
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-        },
-        body: jsonEncode(payload),
-      );
+      print("========== LOGIN API ==========");
+      print("URL : ${ApiEndpoints.login}");
+      print("Payload : ${jsonEncode(payload)}");
 
-      print(response.body);
+      final response = await http
+          .post(
+            Uri.parse(ApiEndpoints.login),
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+            body: jsonEncode(payload),
+          );
+          // .timeout(const Duration(seconds: 30));
+
+      print("Status Code : ${response.statusCode}");
+      print("Response : ${response.body}");
 
       if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        final String token = data["token"];
+        final int userId = data["user"]["id"];
+
+        // Save login session
+        await AuthStorage.saveLogin(userId: userId, token: token);
+
+        print("========== LOGIN SESSION ==========");
+        print("isLoggedIn : ${AuthStorage.isLoggedIn}");
+        print("userId : ${AuthStorage.userId}");
+        print("Token saved : ${AuthStorage.token != null}");
+
         Get.snackbar(
           "Success",
           "Login Successful",
@@ -109,6 +131,8 @@ class LoginController extends GetxController {
         );
       }
     } catch (e) {
+      print("Login Exception : $e");
+
       Get.snackbar("Error", e.toString(), snackPosition: SnackPosition.BOTTOM);
     } finally {
       isLoading.value = false;

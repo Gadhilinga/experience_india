@@ -1,30 +1,33 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
-import 'package:flutter/material.dart';
+import 'package:experience_india/features/profile/controller/profile_controller.dart';
+import 'package:experience_india/features/profile/models/profile_getall_model.dart';
+import 'package:experience_india/features/profile/screens/profile_screen.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:experience_india/main.dart';
+import 'package:get/get.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const ExperienceIndia());
+  setUp(() {
+    Get.reset();
+  });
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+  testWidgets('Profile screen updates email when API data arrives after initial build',
+      (WidgetTester tester) async {
+    final controller = Get.put(ProfileController());
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    await tester.pumpWidget(
+      const GetMaterialApp(
+        home: ProfileScreen(),
+      ),
+    );
+
+    controller.profileData.value = ProfileGetAllModel(
+      firstName: 'YATRIVO',
+      lastName: 'User',
+      email: 'user@example.com',
+    );
+
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    expect(find.text('user@example.com'), findsOneWidget);
+    expect(find.text('travel@yatrivo.com'), findsNothing);
   });
 }

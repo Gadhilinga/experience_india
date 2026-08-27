@@ -1,6 +1,9 @@
+import 'package:experience_india/features/explore/screens/explore_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:experience_india/core/theme/app_colors.dart';
 import 'package:experience_india/features/auth/screens/login_screen.dart';
+import 'package:experience_india/features/navbar/main_navbar.dart';
+import 'package:experience_india/services/auth_storage.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -47,8 +50,13 @@ class _SplashScreenState extends State<SplashScreen>
   void _goToLogin() {
     if (!mounted) return;
     Future.microtask(() {
+      if (!mounted) return;
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        MaterialPageRoute(
+          builder: (context) => AuthStorage.isLoggedIn
+              ? const MainNavbar()
+              : const LoginScreen(),
+        ),
       );
     });
   }

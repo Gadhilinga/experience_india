@@ -1,43 +1,43 @@
+import 'package:experience_india/common_widgets/common_text_button.dart';
+import 'package:experience_india/common_widgets/common_text_widget.dart';
+import 'package:experience_india/features/profile/controller/profile_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/theme/app_colors.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
   @override
-  State<ProfileScreen> createState() =>
-      _ProfileScreenState();
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-class _ProfileScreenState
-    extends State<ProfileScreen> {
-
+class _ProfileScreenState extends State<ProfileScreen> {
   bool notifications = true;
-
+  final ProfileController profileController = Get.put(ProfileController());
   String selectedLanguage = "English";
 
-  Future<void> openWhatsApp() async {
+  @override
+  void initState() {
+    super.initState();
+    profileController.profile();
+  }
 
-    final Uri url = Uri.parse(
-      "https://wa.me/+917093365749",
-    );
+  Future<void> openWhatsApp() async {
+    final Uri url = Uri.parse("https://wa.me/+917093365749");
 
     if (await canLaunchUrl(url)) {
-      await launchUrl(
-        url,
-        mode: LaunchMode.externalApplication,
-      );
+      await launchUrl(url, mode: LaunchMode.externalApplication);
     }
   }
 
   Future<void> openEmail() async {
-
     final Uri email = Uri(
       scheme: 'mailto',
       path: 'support@yatrivo.com',
-      query:
-          'subject=YATRIVO Support',
+      query: 'subject=YATRIVO Support',
     );
 
     if (await canLaunchUrl(email)) {
@@ -46,18 +46,14 @@ class _ProfileScreenState
   }
 
   void showLanguageBottomSheet() {
-
     showModalBottomSheet(
       context: context,
 
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(30),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
       ),
 
       builder: (context) {
-
         return Padding(
           padding: const EdgeInsets.all(20),
 
@@ -65,7 +61,6 @@ class _ProfileScreenState
             mainAxisSize: MainAxisSize.min,
 
             children: [
-
               Text(
                 "Choose Language",
                 style: TextStyle(
@@ -90,33 +85,19 @@ class _ProfileScreenState
   }
 
   Widget languageTile(String language) {
-
     return ListTile(
-
-      leading: Icon(
-        Icons.language,
-        color: AppColors.saffron,
-      ),
+      leading: Icon(Icons.language, color: AppColors.saffron),
 
       title: Text(
         language,
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          color: AppColors.primary,
-        ),
+        style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.primary),
       ),
 
-      trailing:
-          selectedLanguage == language
-              ? Icon(
-                  Icons.check_circle,
-                  color:
-                      AppColors.indiaGreen,
-                )
-              : null,
+      trailing: selectedLanguage == language
+          ? Icon(Icons.check_circle, color: AppColors.indiaGreen)
+          : null,
 
       onTap: () {
-
         setState(() {
           selectedLanguage = language;
         });
@@ -127,9 +108,7 @@ class _ProfileScreenState
   }
 
   void showEditProfileDialog() {
-
-    final TextEditingController nameController =
-        TextEditingController(
+    final TextEditingController nameController = TextEditingController(
       text: "YATRIVO User",
     );
 
@@ -137,12 +116,9 @@ class _ProfileScreenState
       context: context,
 
       builder: (context) {
-
         return AlertDialog(
-
           shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24),
           ),
 
           title: Text(
@@ -159,26 +135,18 @@ class _ProfileScreenState
             decoration: InputDecoration(
               hintText: "Enter your name",
 
-              focusedBorder:
-                  OutlineInputBorder(
-                borderRadius:
-                    BorderRadius.circular(
-                        14),
-                borderSide: BorderSide(
-                  color: AppColors.saffron,
-                ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(color: AppColors.saffron),
               ),
 
               border: OutlineInputBorder(
-                borderRadius:
-                    BorderRadius.circular(
-                        14),
+                borderRadius: BorderRadius.circular(14),
               ),
             ),
           ),
 
           actions: [
-
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -188,22 +156,15 @@ class _ProfileScreenState
             ),
 
             ElevatedButton(
-              style:
-                  ElevatedButton.styleFrom(
-                backgroundColor:
-                    AppColors.saffron,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.saffron,
               ),
 
               onPressed: () {
                 Navigator.pop(context);
               },
 
-              child: const Text(
-                "Save",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
+              child: const Text("Save", style: TextStyle(color: Colors.white)),
             ),
           ],
         );
@@ -212,17 +173,13 @@ class _ProfileScreenState
   }
 
   void showPrivacyDialog() {
-
     showDialog(
       context: context,
 
       builder: (context) {
-
         return AlertDialog(
-
           shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24),
           ),
 
           title: Text(
@@ -238,18 +195,12 @@ class _ProfileScreenState
           ),
 
           actions: [
-
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
               },
 
-              child: Text(
-                "OK",
-                style: TextStyle(
-                  color: AppColors.saffron,
-                ),
-              ),
+              child: Text("OK", style: TextStyle(color: AppColors.saffron)),
             ),
           ],
         );
@@ -258,29 +209,20 @@ class _ProfileScreenState
   }
 
   void logoutDialog() {
-
     showDialog(
       context: context,
 
       builder: (context) {
-
         return AlertDialog(
-
           shape: RoundedRectangleBorder(
-            borderRadius:
-                BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(24),
           ),
 
-          title: const Text(
-            "Logout",
-          ),
+          title: const Text("Logout"),
 
-          content: const Text(
-            "Are you sure you want to logout?",
-          ),
+          content: const Text("Are you sure you want to logout?"),
 
           actions: [
-
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -288,34 +230,13 @@ class _ProfileScreenState
 
               child: const Text("Cancel"),
             ),
-
-            ElevatedButton(
-              style:
-                  ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-              ),
-
-              onPressed: () {
-
+            CommonTextButton(
+              text: 'Logout',
+              onPressed: () async {
                 Navigator.pop(context);
 
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(
-
-                  const SnackBar(
-                    content:
-                        Text("Logged out"),
-                  ),
-                );
+                await profileController.logout();
               },
-
-              child: const Text(
-                "Logout",
-                style: TextStyle(
-                  color: Colors.white,
-                ),
-              ),
             ),
           ],
         );
@@ -325,154 +246,99 @@ class _ProfileScreenState
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-      backgroundColor:
-          AppColors.background,
-
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor:
-            Colors.transparent,
-
+        backgroundColor: Colors.transparent,
         elevation: 0,
-
         centerTitle: true,
-
         title: Text(
           "My Profile",
-
           style: TextStyle(
             color: AppColors.primary,
-            fontWeight:
-                FontWeight.bold,
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
+      body: Obx(() {
+        final profile = profileController.profileData.value;
+        final fullName = [
+          profile?.firstName,
+          profile?.lastName,
+        ].where((value) => value != null && value.isNotEmpty).join(' ').trim();
 
-      body: SingleChildScrollView(
+        final email = profile?.email ?? 'No email available';
+        final mobile = profile?.mobile ?? 'No mobile available';
+        final location = profile?.location ?? 'No location available';
 
-        padding:
-            const EdgeInsets.all(20),
+        if (profileController.isLoading.value) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-        child: Column(
-
-          children: [
-
-            const SizedBox(height: 10),
-
-            Container(
-              padding:
-                  const EdgeInsets.all(4),
-
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-
-                gradient:
-                    LinearGradient(
-                  colors: [
-                    AppColors.saffron,
-                    AppColors.indiaGreen,
-                  ],
-                ),
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            children: [
+              CommonTextWidget(
+                title: fullName.isNotEmpty ? fullName : "YATRIVO User",
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary,
               ),
+              const SizedBox(height: 8),
 
-              child: const CircleAvatar(
-                radius: 55,
+              _detailesTextWidget(email),
+              _detailesTextWidget(mobile),
+              _detailesTextWidget(location),
 
-                backgroundImage:
-                    AssetImage(
-                  "assets/images/app_logo.png",
-                ),
+              _detailesTextWidget(location),
+              const SizedBox(height: 40),
+              settingsTile(
+                icon: Icons.edit,
+                title: "Edit Profile",
+                onTap: showEditProfileDialog,
               ),
-            ),
-
-            const SizedBox(height: 20),
-
-            Text(
-              "YATRIVO User",
-
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight:
-                    FontWeight.bold,
-                color:
-                    AppColors.primary,
+              settingsSwitchTile(),
+              settingsTile(
+                icon: Icons.language,
+                title: "Language ($selectedLanguage)",
+                onTap: showLanguageBottomSheet,
               ),
-            ),
-
-            const SizedBox(height: 8),
-
-            Text(
-              "travel@yatrivo.com",
-
-              style: TextStyle(
-                color:
-                    Colors.grey.shade700,
-                fontSize: 15,
+              settingsTile(
+                icon: Icons.lock,
+                title: "Privacy & Security",
+                onTap: showPrivacyDialog,
               ),
-            ),
+              settingsTile(
+                icon: Icons.support_agent,
+                title: "Help & Support",
+                onTap: openWhatsApp,
+              ),
+              settingsTile(
+                icon: Icons.email,
+                title: "Email Support",
+                onTap: openEmail,
+              ),
+              settingsTile(
+                icon: Icons.logout,
+                title: "Logout",
+                color: Colors.red,
+                onTap: logoutDialog,
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
+        );
+      }),
+    );
+  }
 
-            const SizedBox(height: 40),
-
-            settingsTile(
-              icon: Icons.edit,
-              title: "Edit Profile",
-
-              onTap:
-                  showEditProfileDialog,
-            ),
-
-            settingsSwitchTile(),
-
-            settingsTile(
-              icon: Icons.language,
-              title:
-                  "Language ($selectedLanguage)",
-
-              onTap:
-                  showLanguageBottomSheet,
-            ),
-
-            settingsTile(
-              icon: Icons.lock,
-              title:
-                  "Privacy & Security",
-
-              onTap:
-                  showPrivacyDialog,
-            ),
-
-            settingsTile(
-              icon: Icons.support_agent,
-              title:
-                  "Help & Support",
-
-              onTap:
-                  openWhatsApp,
-            ),
-
-            settingsTile(
-              icon: Icons.email,
-              title:
-                  "Email Support",
-
-              onTap:
-                  openEmail,
-            ),
-
-            settingsTile(
-              icon: Icons.logout,
-              title: "Logout",
-
-              color: Colors.red,
-
-              onTap: logoutDialog,
-            ),
-
-            const SizedBox(height: 30),
-          ],
-        ),
-      ),
+  Widget _detailesTextWidget(String title) {
+    return CommonTextWidget(
+      title: title,
+      fontSize: 15,
+      color: AppColors.primary,
+      fontWeight: FontWeight.w500,
     );
   }
 
@@ -482,60 +348,32 @@ class _ProfileScreenState
     required VoidCallback onTap,
     Color? color,
   }) {
-
     return Container(
-
-      margin:
-          const EdgeInsets.only(
-        bottom: 18,
-      ),
+      margin: const EdgeInsets.only(bottom: 18),
 
       decoration: BoxDecoration(
         color: Colors.white,
 
-        borderRadius:
-            BorderRadius.circular(
-                22),
-
-        boxShadow: [
-
-          BoxShadow(
-            color:
-                Colors.black.withOpacity(
-                    0.04),
-
-            blurRadius: 10,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(22),
       ),
 
       child: ListTile(
-
-        leading: Icon(
-          icon,
-          color:
-              color ??
-              AppColors.saffron,
-        ),
+        leading: Icon(icon, color: color ?? AppColors.saffron),
 
         title: Text(
           title,
 
           style: TextStyle(
-            fontWeight:
-                FontWeight.w600,
+            fontWeight: FontWeight.w600,
 
-            color:
-                color ??
-                AppColors.primary,
+            color: color ?? AppColors.primary,
           ),
         ),
 
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 18,
-          color:
-              Colors.grey.shade400,
+          color: Colors.grey.shade400,
         ),
 
         onTap: onTap,
@@ -544,60 +382,33 @@ class _ProfileScreenState
   }
 
   Widget settingsSwitchTile() {
-
     return Container(
-
-      margin:
-          const EdgeInsets.only(
-        bottom: 18,
-      ),
+      margin: const EdgeInsets.only(bottom: 18),
 
       decoration: BoxDecoration(
         color: Colors.white,
 
-        borderRadius:
-            BorderRadius.circular(
-                22),
-
-        boxShadow: [
-
-          BoxShadow(
-            color:
-                Colors.black.withOpacity(
-                    0.04),
-
-            blurRadius: 10,
-          ),
-        ],
+        borderRadius: BorderRadius.circular(22),
       ),
 
       child: SwitchListTile(
-
         value: notifications,
 
-        activeColor:
-            AppColors.indiaGreen,
+        activeThumbColor: AppColors.indiaGreen,
 
-        secondary: Icon(
-          Icons.notifications,
-          color:
-              AppColors.saffron,
-        ),
+        secondary: Icon(Icons.notifications, color: AppColors.saffron),
 
         title: Text(
           "Notifications",
 
           style: TextStyle(
-            fontWeight:
-                FontWeight.w600,
+            fontWeight: FontWeight.w600,
 
-            color:
-                AppColors.primary,
+            color: AppColors.primary,
           ),
         ),
 
         onChanged: (value) {
-
           setState(() {
             notifications = value;
           });
