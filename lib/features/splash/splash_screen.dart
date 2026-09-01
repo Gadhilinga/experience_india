@@ -1,4 +1,3 @@
-import 'package:experience_india/features/explore/screens/explore_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:experience_india/core/theme/app_colors.dart';
 import 'package:experience_india/features/auth/screens/login_screen.dart';

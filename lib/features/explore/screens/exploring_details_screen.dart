@@ -1,6 +1,7 @@
 import 'package:experience_india/common_widgets/common_text_widget.dart';
 import 'package:experience_india/core/theme/app_colors.dart';
 import 'package:experience_india/features/explore/models/explore_get_model.dart';
+import 'package:experience_india/features/explore/screens/share_destination.dart';
 import 'package:flutter/material.dart';
 
 class ExploringDetailsScreen extends StatelessWidget {
@@ -16,7 +17,7 @@ class ExploringDetailsScreen extends StatelessWidget {
         // physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
-            expandedHeight: 360,
+            expandedHeight: 250,
             pinned: true,
             stretch: true,
             backgroundColor: AppColors.white,
@@ -264,71 +265,13 @@ class ExploringDetailsScreen extends StatelessWidget {
 
                     const SizedBox(height: 28),
 
-                    // _sectionTitle('Location'),
-
-                    // const SizedBox(height: 10),
-
-                    // Container(
-                    //   width: double.infinity,
-                    //   decoration: BoxDecoration(
-                    //     color: Colors.blue.shade50,
-                    //     borderRadius: BorderRadius.circular(14),
-                    //   ),
-                    //   child: Column(
-                    //     children: [
-                    //       _locationRow(
-                    //         icon: Icons.my_location,
-                    //         title: 'Latitude',
-                    //         value: '${destination?.location?.latitude ?? ''}',
-                    //       ),
-
-                    //       Divider(height: 1, color: Colors.blue.shade100),
-
-                    //       _locationRow(
-                    //         icon: Icons.my_location,
-                    //         title: 'Longitude',
-                    //         value: '${destination?.location?.longitude ?? ''}',
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-
-                    // const SizedBox(height: 32),
-
-                    // ==================================================
-                    // BUTTONS
-                    // ==================================================
                     Row(
                       children: [
                         Expanded(
                           child: OutlinedButton.icon(
-                            onPressed: () {},
-                            style: OutlinedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 15),
-                              side: BorderSide(color: AppColors.primary),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            icon: Icon(
-                              Icons.bookmark_border,
-                              color: AppColors.primary,
-                            ),
-                            label: Text(
-                              'Save',
-                              style: TextStyle(
-                                color: AppColors.primary,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(width: 10),
-
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () {},
+                            onPressed: () async {
+                              await ShareDestination.share(destination!);
+                            },
                             style: OutlinedButton.styleFrom(
                               padding: const EdgeInsets.symmetric(vertical: 15),
                               side: const BorderSide(color: Colors.blue),
@@ -350,7 +293,6 @@ class ExploringDetailsScreen extends StatelessWidget {
                         const SizedBox(width: 10),
 
                         Expanded(
-                          flex: 2,
                           child: ElevatedButton.icon(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
@@ -404,7 +346,12 @@ class ExploringDetailsScreen extends StatelessWidget {
 
         return Container(
           color: Colors.grey.shade300,
-          child: const Center(child: CircularProgressIndicator()),
+          child: const Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 1,
+              backgroundColor: AppColors.appColor,
+            ),
+          ),
         );
       },
       errorBuilder: (context, error, stackTrace) {

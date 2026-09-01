@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
 import 'core/theme/app_theme.dart';
+import 'features/explore/screens/share_destination.dart';
 import 'features/splash/splash_screen.dart';
 
 Future<void> main() async {
@@ -14,10 +15,13 @@ Future<void> main() async {
   // Open authentication box
   await Hive.openBox('auth');
 
+  await Get.putAsync<DeepLinkService>(
+    () => DeepLinkService().init(),
+  );
+
   runApp(
     const ExperienceIndia(),
   );
-
 }
 
 class ExperienceIndia extends StatelessWidget {
